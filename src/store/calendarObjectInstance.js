@@ -76,6 +76,7 @@ const mutations = {
 		state.calendarObjectInstance = calendarObjectInstance
 		state.existingEvent.objectId = objectId
 		state.existingEvent.recurrenceId = recurrenceId
+		this.commit('incrementModificationCount')
 	},
 
 	/**
@@ -92,6 +93,7 @@ const mutations = {
 		state.calendarObjectInstance = calendarObjectInstance
 		state.existingEvent.objectId = null
 		state.existingEvent.recurrenceId = null
+		this.commit('incrementModificationCount')
 	},
 
 	/**
@@ -104,6 +106,7 @@ const mutations = {
 		state.calendarObjectInstance = null
 		state.existingEvent.objectId = null
 		state.existingEvent.recurrenceId = null
+		this.commit('incrementModificationCount')
 	},
 
 	/**
@@ -1336,7 +1339,17 @@ const mutations = {
 	},
 }
 
-const getters = {}
+const getters = {
+
+	/**
+	 * Gets the calendar-object that is currently being edited
+	 *
+	 * @param {Object} state The store data
+	 * @returns {function(): CalendarObject}
+	 */
+	getCalendarObject: (state) => () => state.calendarObject,
+
+}
 
 const actions = {
 

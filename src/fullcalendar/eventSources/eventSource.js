@@ -49,6 +49,14 @@ export default function(store) {
 					logger.error(`EventSource: Timezone ${timeZone} not found, falling back to UTC.`)
 				}
 
+				const calendarObjects = []
+
+				// Show the current edited calendar object if it's new
+				const calendarObject = store.getters.getCalendarObject()
+				if (calendarObject && !calendarObject.existsOnServer && calendarObject.calendarId === calendar.id) {
+					calendarObjects.push(calendarObject)
+				}
+
 				// This code assumes that once a time range has been fetched it won't be changed
 				// outside of the vuex store. Triggering a refetch will just update all known
 				// calendar objects inside this time range. New events that were added to a cached
@@ -67,10 +75,10 @@ export default function(store) {
 						return
 					}
 
-					const calendarObjects = store.getters.getCalendarObjectsByTimeRangeId(timeRangeId)
+					calendarObjects.push(...store.getters.getCalendarObjectsByTimeRangeId(timeRangeId))
 					successCallback(eventSourceFunction(calendarObjects, calendar, start, end, timezoneObject))
 				} else {
-					const calendarObjects = store.getters.getCalendarObjectsByTimeRangeId(timeRange.id)
+					calendarObjects.push(...store.getters.getCalendarObjectsByTimeRangeId(timeRange.id))
 					successCallback(eventSourceFunction(calendarObjects, calendar, start, end, timezoneObject))
 				}
 			},
